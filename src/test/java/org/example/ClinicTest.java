@@ -1,4 +1,5 @@
 package org.example;
+import org.example.Enums.TriageType;
 import org.example.Enums.VisibleSymptom;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,5 +43,38 @@ public class ClinicTest {
 
         assertEquals(clinic.getNumeroPatient(patient2), 2);
         assertTrue(clinic.radioEstVide());
+    }
+
+    // Etape 2
+    @Test
+    public void Clinic_QuandEstCree_AUnTypeTriage(){
+        Clinic clinic1 = new Clinic();
+        Clinic clinic2 = new Clinic(TriageType.FIFO);
+        Clinic clinic3 = new Clinic(TriageType.GRAVITY);
+
+        assertEquals(clinic1.getTriageType(), TriageType.FIFO);
+        assertEquals(clinic2.getTriageType(), TriageType.FIFO);
+        assertEquals(clinic3.getTriageType(), TriageType.GRAVITY);
+    }
+
+    @Test
+    public void ClinicGravityAvecPatient_QuandUnPatientGravitePlusGrandQue5_EstTrieEnPremier(){
+        Clinic clinic = new Clinic(TriageType.GRAVITY);
+
+        clinic.triagePatient("Dr Terror",1, VisibleSymptom.COLD);
+        clinic.triagePatient("Zorro le Justicier Masqué",6, VisibleSymptom.FLU);
+
+        assertEquals("Zorro le Justicier Masqué", clinic.getNextPatientMedecin());
+    }
+
+    // Etape 3
+    @Test
+    public void ClinicGravityAvecPatientMedecinEtRadio_QuandUnPatientBrokenBoneGravite7_EstTrieEnDeuxiemeEnRadio(){
+        Clinic clinic = new Clinic(TriageType.GRAVITY);
+
+        clinic.triagePatient("Dr Terror",1, VisibleSymptom.SPRAIN);
+        clinic.triagePatient("Zorro le Justicier Masqué",7, VisibleSymptom.BROKEN_BONE);
+
+        assertEquals("Dr Terror", clinic.getNextPatientRadio());
     }
 }
